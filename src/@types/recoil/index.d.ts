@@ -107,10 +107,18 @@ declare module 'recoil' {
   export const RecoilRoot: FC<RecoilRootProps>;
 
   // atom.d.ts
+  export type PersistenceType = 'none' | 'url';
+  export type PersistenceInfo = {
+    readonly type: PersistenceType;
+    readonly backButton?: boolean;
+  };
+  export type PersistenceSettings<T> = PersistenceInfo & {
+    readonly validator: (newVal: T, defaultVal: T) => T | DefaultValue;
+  };
   export interface AtomOptions<T> {
     readonly key: NodeKey;
     readonly default: RecoilValue<T> | Promise<T> | T;
-    // persistence_UNSTABLE?: PersistenceSettings<T>,
+    readonly persistence_UNSTABLE?: PersistenceSettings<T>;
     readonly dangerouslyAllowMutability?: boolean;
   }
 
@@ -187,4 +195,31 @@ declare module 'recoil' {
     fn: (interface: CallbackInterface, ...args: Args) => Return,
     deps?: ReadonlyArray<unknown>
   ): (...args: Args) => Return;
+
+  // Hooks for Persistence/Debugging
+  type PersistenceType = 'none' | 'url';
+  type ExternallyVisibleAtomInfo = {
+    persistence_UNSTABLE: {
+      type: PersistenceType;
+      backButton: boolean;
+    };
+  };
+  type TransactionCallbackOptions = {
+    atomValues: Map<NodeKey, any>;
+    previousAtomValues: Map<NodeKey, any>;
+    atomInfo: Map<NodeKey, ExternallyVisibleAtomInfo>;
+    modifiedAtoms: Set<NodeKey>;
+    transactionMetadata: { [NodeKey]: any };
+  };
+
+  export function useTransactionObservation_UNSTABLE(
+    callback: (optons: TransactionCallbackOptions) => void
+  ): void;
+  export function useTransactionSubscription_UNSTABLE(
+    callback: (store: any, treeState: TreeState) => void
+  ): void;
+  export function useSetUnvalidatedAtomValues_UNSTABLE(
+    values: AtomValues,
+    transactionMetadata: any
+  ): void;
 }

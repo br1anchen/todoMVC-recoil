@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { getTodos } from './effects';
 
 export interface Todo {
   id: string;
@@ -8,7 +9,15 @@ export interface Todo {
 
 export const todosState = atom<Todo[]>({
   key: 'todos',
-  default: [],
+  default: getTodos(),
+  persistence_UNSTABLE: {
+    type: 'url',
+    validator: (newVal, defaultVal) => {
+      console.log('newVal: ', newVal);
+      console.log('defaultVal: ', defaultVal);
+      return newVal;
+    },
+  },
 });
 
 export type TodoFilter = 'all' | 'active' | 'completed';

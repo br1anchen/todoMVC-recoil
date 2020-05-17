@@ -1,5 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useTransactionObservation_UNSTABLE,
+} from 'recoil';
 
 import TodoItem from './TodoItem';
 import TodoFooter from './TodoFooter';
@@ -14,6 +18,7 @@ import {
   updateTodo,
   clearCompleted,
 } from './recoil/mutations';
+import { storeTodos } from './recoil/effects';
 
 const TodoApp = () => {
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');
@@ -22,6 +27,12 @@ const TodoApp = () => {
   const [todos, setTodos] = useRecoilState(todosState);
   const [editingTodoId, setEditingTodoId] = useRecoilState(editingTodoIdState);
   const filter = useRecoilValue(filterState);
+
+  useTransactionObservation_UNSTABLE(({ atomValues, modifiedAtoms }) => {
+    if (modifiedAtoms.has(todosState.key)) {
+      storeTodos(atomValues.get(todosState.key));
+    }
+  });
 
   const handleSaveEditingTodo = useCallback(
     (newTitle: string) => {
