@@ -32,18 +32,18 @@ const TodoFooter = ({
       </span>
       <ul className="filters">
         <li>
-          <a href="#/" className={cn({ selected: filter === 'all' })}>
+          <a href="#" className={cn({ selected: filter === 'all' })}>
             All
           </a>
         </li>{' '}
         <li>
-          <a href="#/active" className={cn({ selected: filter === 'active' })}>
+          <a href="#active" className={cn({ selected: filter === 'active' })}>
             Active
           </a>
         </li>{' '}
         <li>
           <a
-            href="#/completed"
+            href="#completed"
             className={cn({ selected: filter === 'completed' })}
           >
             Completed

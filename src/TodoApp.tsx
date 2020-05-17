@@ -18,7 +18,8 @@ import {
   updateTodo,
   clearCompleted,
 } from './recoil/mutations';
-import { storeTodos } from './recoil/effects';
+import { storeTodos, getFilterByUrl } from './recoil/effects';
+import useEventListener from './useEventListener';
 
 const TodoApp = () => {
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');
@@ -26,12 +27,17 @@ const TodoApp = () => {
   const activeTodoCount = useRecoilValue(selectActiveTodoCount);
   const [todos, setTodos] = useRecoilState(todosState);
   const [editingTodoId, setEditingTodoId] = useRecoilState(editingTodoIdState);
-  const filter = useRecoilValue(filterState);
+  const [filter, setFilter] = useRecoilState(filterState);
 
   useTransactionObservation_UNSTABLE(({ atomValues, modifiedAtoms }) => {
     if (modifiedAtoms.has(todosState.key)) {
       storeTodos(atomValues.get(todosState.key));
     }
+  });
+
+  useEventListener('hashchange', (e) => {
+    const filterByUrl = getFilterByUrl();
+    setFilter(filterByUrl);
   });
 
   const handleSaveEditingTodo = useCallback(
@@ -62,7 +68,7 @@ const TodoApp = () => {
         todo={todo}
         onToggle={(todoId) => setTodos(toggleTodo(todoId))}
         onDestroy={(todoId) => setTodos(removeTodo(todoId))}
-        onEdit={setEditingTodoId}
+        onEdit={(todoId) => setEditingTodoId(todoId)}
         isEditing={editingTodoId === todo.id}
         onSave={handleSaveEditingTodo}
         onCancel={() => setEditingTodoId(null)}
