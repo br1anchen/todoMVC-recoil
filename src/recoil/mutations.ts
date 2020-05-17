@@ -24,6 +24,13 @@ export const removeTodo = (todoId: Todo['id']) => (oldTodos: Todo[]) =>
     return t.id !== todoId;
   });
 
+export const updateTodo = (todoId: Todo['id'], changes: Partial<Todo>) => (
+  oldTodos: Todo[]
+) =>
+  oldTodos.map((t) => {
+    return t.id !== todoId ? t : { ...t, ...changes };
+  });
+
 export const clearCompleted = () => (oldTodos: Todo[]) =>
   oldTodos.filter((t) => {
     return !t.completed;

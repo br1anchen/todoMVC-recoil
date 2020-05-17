@@ -11,6 +11,7 @@ import {
   toggleTodo,
   addTodo,
   removeTodo,
+  updateTodo,
   clearCompleted,
 } from './recoil/mutations';
 
@@ -24,11 +25,7 @@ const TodoApp = () => {
 
   const handleSaveEditingTodo = useCallback(
     (newTitle: string) => {
-      setTodos((oldTodos) =>
-        oldTodos.map((t) => {
-          return t.id !== editingTodoId ? t : { ...t, title: newTitle };
-        })
-      );
+      setTodos(updateTodo(editingTodoId!, { title: newTitle }));
       setEditingTodoId(null);
     },
     [editingTodoId, setTodos, setEditingTodoId]
