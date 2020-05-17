@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 
 import Utils from './Utils';
-import { TodoFilter } from '../overmind/state';
+import { TodoFilter } from './recoil/atoms';
 
 interface Props {
   completedCount: number;

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import cn from 'classnames';
 
-import { Todo } from '../overmind/state';
+import { Todo } from './recoil/atoms';
 
 interface Props {
   todo: Todo;
