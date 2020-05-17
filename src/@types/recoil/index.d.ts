@@ -70,7 +70,8 @@ declare module 'recoil' {
 
   // state.d.ts
   export type NodeKey = string;
-  export type AtomValues = Map<NodeKey, Loadable<any>>;
+  export type AtomValues = Map<NodeKey, any>;
+  export type AtomLoadableValues = Map<NodeKey, Loadable<T>>;
   export type ComponentCallback = (state: TreeState) => void;
   export type TreeState = Readonly<{
     // Information about the TreeState itself:
@@ -79,7 +80,7 @@ declare module 'recoil' {
     dirtyAtoms: Set<NodeKey>;
 
     // ATOMS
-    atomValues: AtomValues;
+    atomValues: AtomLoadableValues;
     nonvalidatedAtoms: Map<NodeKey, unknown>;
 
     // NODE GRAPH -- will soon move to StoreState
@@ -205,8 +206,8 @@ declare module 'recoil' {
     };
   };
   type TransactionCallbackOptions = {
-    atomValues: Map<NodeKey, any>;
-    previousAtomValues: Map<NodeKey, any>;
+    atomValues: AtomValues;
+    previousAtomValues: AtomValues;
     atomInfo: Map<NodeKey, ExternallyVisibleAtomInfo>;
     modifiedAtoms: Set<NodeKey>;
     transactionMetadata: { [NodeKey]: any };
