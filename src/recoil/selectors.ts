@@ -1,12 +1,13 @@
 import { selector } from 'recoil';
 
-import { Todo, todosState, filterState } from './atoms';
+import { Todo, todosState } from './atoms';
+import { todoFilterState } from './router';
 
 export const selectFilteredTodos = selector<Todo[]>({
   key: 'selectFilteredTodos',
   get: ({ get }) => {
     const todos = get(todosState);
-    const filter = get(filterState);
+    const filter = get(todoFilterState);
 
     return todos.filter((t) => {
       switch (filter) {

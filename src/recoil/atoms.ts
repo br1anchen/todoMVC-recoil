@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
-import { getTodos, getFilterByUrl } from './effects';
+import { getTodos } from './effects';
+import { routerAtom } from './router';
 
 export interface Todo {
   id: string;
@@ -12,22 +13,20 @@ export const todosState = atom<Todo[]>({
   default: getTodos(),
   persistence_UNSTABLE: {
     type: 'url',
-    validator: (newVal, defaultVal) => {
-      console.log('newVal: ', newVal);
-      console.log('defaultVal: ', defaultVal);
-      return newVal;
+    validator: (storedValue, _defaultVal) => {
+      return storedValue;
     },
   },
-});
-
-export type TodoFilter = 'all' | 'active' | 'completed';
-
-export const filterState = atom<TodoFilter>({
-  key: 'todoFilter',
-  default: getFilterByUrl(),
 });
 
 export const editingTodoIdState = atom<string | null>({
   key: 'editingTodoId',
   default: null,
+});
+
+export type TodoFilter = 'all' | 'active' | 'completed';
+export const todoFilterState = routerAtom<TodoFilter>({
+  path: '/:todoFilter',
+  paramKey: 'todoFilter',
+  default: 'all',
 });

@@ -8,7 +8,11 @@ import {
 import TodoItem from './TodoItem';
 import TodoFooter from './TodoFooter';
 
-import { editingTodoIdState, todosState, filterState } from './recoil/atoms';
+import {
+  editingTodoIdState,
+  todosState,
+  todoFilterState,
+} from './recoil/atoms';
 import { selectFilteredTodos, selectActiveTodoCount } from './recoil/selectors';
 import {
   toggleAllTodo,
@@ -18,8 +22,8 @@ import {
   updateTodo,
   clearCompleted,
 } from './recoil/mutations';
-import { storeTodos, getFilterByUrl } from './recoil/effects';
-import useEventListener from './useEventListener';
+import { storeTodos } from './recoil/effects';
+import { useRecoilRouterState } from './recoil/router';
 
 const TodoApp = () => {
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');
@@ -27,17 +31,12 @@ const TodoApp = () => {
   const activeTodoCount = useRecoilValue(selectActiveTodoCount);
   const [todos, setTodos] = useRecoilState(todosState);
   const [editingTodoId, setEditingTodoId] = useRecoilState(editingTodoIdState);
-  const [filter, setFilter] = useRecoilState(filterState);
+  const [todoFilter, _setTodoFilter] = useRecoilRouterState(todoFilterState);
 
   useTransactionObservation_UNSTABLE(({ atomValues, modifiedAtoms }) => {
     if (modifiedAtoms.has(todosState.key)) {
       storeTodos(atomValues.get(todosState.key));
     }
-  });
-
-  useEventListener('hashchange', (e) => {
-    const filterByUrl = getFilterByUrl();
-    setFilter(filterByUrl);
   });
 
   const handleSaveEditingTodo = useCallback(
@@ -80,7 +79,7 @@ const TodoApp = () => {
     <TodoFooter
       activeCount={activeTodoCount}
       completedCount={todos.length - activeTodoCount}
-      filter={filter}
+      filter={todoFilter}
       onClearCompleted={() => setTodos(clearCompleted())}
     />
   );
