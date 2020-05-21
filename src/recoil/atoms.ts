@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { getTodos } from './effects';
+import { getStoredState } from './localStorage';
 import { routerAtom } from './router';
 
 export interface Todo {
@@ -10,7 +10,7 @@ export interface Todo {
 
 export const todosState = atom<Todo[]>({
   key: 'todos',
-  default: getTodos(),
+  default: getStoredState('todos'),
   persistence_UNSTABLE: {
     type: 'url',
     validator: (storedValue, _defaultVal) => {
