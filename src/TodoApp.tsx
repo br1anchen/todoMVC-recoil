@@ -18,7 +18,7 @@ import {
   updateTodo,
   clearCompleted,
 } from './recoil/mutations';
-import { useRecoilRouterState } from './recoil/router';
+import { useRecoilRouterValue } from './recoil/router';
 import { useRecoilLocalStorageState } from './recoil/localStorage';
 
 const TodoApp = () => {
@@ -27,7 +27,7 @@ const TodoApp = () => {
   const activeTodoCount = useRecoilValue(selectActiveTodoCount);
   const [todos, setTodos] = useRecoilLocalStorageState(todosState);
   const [editingTodoId, setEditingTodoId] = useRecoilState(editingTodoIdState);
-  const [todoFilter, _setTodoFilter] = useRecoilRouterState(todoFilterState);
+  const todoFilter = useRecoilRouterValue(todoFilterState);
 
   const handleSaveEditingTodo = useCallback(
     (newTitle: string) => {

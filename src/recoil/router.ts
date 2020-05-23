@@ -59,6 +59,11 @@ export const useRecoilRouterState = <T>(state: RouterState<T>) => {
   return [value, setValue];
 };
 
+export const useRecoilRouterValue = <T>(state: RouterState<T>) => {
+  const [value, _setValue] = useRecoilRouterState(state);
+  return value;
+};
+
 export type TodoFilter = 'all' | 'active' | 'completed';
 export const todoFilterState = routerAtom<TodoFilter>({
   path: '/:todoFilter',
